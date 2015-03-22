@@ -33,11 +33,11 @@ int main(int argc, char **argv)
 
 	rangeLength = (int) floor(precision/proc_count);
 	//Leibnitz formula instead of randomness
-	myN = i * rangeLength;
-	myStopN = (i +1) * rangeLength;
+	myN = my_rank * rangeLength;
+	myStopN = (my_rank +1) * rangeLength;
 
 	// I am the last one, going to the end
-	if(i == proc_count -1)
+	if(my_rank == proc_count -1)
 	{
 		myStopN = (int) precision;
 	}

@@ -30,11 +30,11 @@ int main(int argc, char **argv)
 
 	//Each process do computing for itself
 	pi = 0;
-	mine = (precision/proccount)*myrank+1;
+	mine = (precision/proc_count)*my_rank+1;
 	sign = (( (mine-1)/2 ) % 2) ? -1 : 1;
 
 	sign=(((mine-1)/2)%2)?-1:1;
-	for (;mine<(precision/proccount)*(myrank+1);) 
+	for (;mine<(precision/proc_count)*(my_rank+1);) 
 	{
 		// printf("\nProcess %d %d %d", myrank,sign,mine);
 		// fflush(stdout);
