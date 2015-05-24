@@ -147,8 +147,6 @@ int main(int argc, char **argv)
             // And add the result
             if (request_completed < (proc_count-1))
             {
-                statues[request_completed][0] = statues[request_completed][1];
-
                 #ifdef DEBUG
                 printf("\nMASTER received result %f from process %d", statues[request_completed][1], request_completed+1);
                 fflush(stdout);
@@ -157,6 +155,10 @@ int main(int argc, char **argv)
                 double difference_for_eps = fabs(statues[request_completed][1]-statues[request_completed][0]);
                 int check_eps = 1;
                 if(isnan(statues[request_completed][1]) || isnan(statues[request_completed][0]))
+                {
+                    check_eps = 0;
+                }
+                if(statues[request_completed][1] == statues[request_completed][0])
                 {
                     check_eps = 0;
                 }
@@ -214,13 +216,15 @@ int main(int argc, char **argv)
                     // Now issue a corresponding recv
                     MPI_Irecv(&(statues[request_completed][1]), 1, MPI_DOUBLE, request_completed+1, MSG_RETURN_DATA, MPI_COMM_WORLD, &(requests[request_completed]));
                 }
+
+                statues[request_completed][0] = statues[request_completed][1];
             }
 
             // Check if everyone has finished working
             for(i = 0; i < proc_count - 1; i++)
             {
                 #ifdef DEBUG
-                printf("\nMASTER checking if statues[%d][3] equals 3, meaning slave has finished working - current value: %f", i, statues[i][3]);
+                printf("\nMASTER checking if statues[%d][3] equals 2, meaning slave has finished working - current value: %f", i, statues[i][3]);
                 #endif
                 if(statues[i][3] == SLAVE_STATUS_FINISHED)
                 {
@@ -320,7 +324,7 @@ int main(int argc, char **argv)
                 #endif
                 should_work = 0;
             }
-
+            
             // And start sending the results back
             MPI_Isend(&computation_results, 1, MPI_DOUBLE, 0, MSG_RETURN_DATA, MPI_COMM_WORLD, &(requests[1]));
 
